@@ -1,0 +1,99 @@
+@import url(https://allfont.net/allfont.css?fonts=digital-7);
+
+                          /* @mixin width-height($width, $height: $width) {
+                            width: $width;
+                            height: $height;
+                          } */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.clocks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+#clocks-DOM,
+#clocks-SVG,
+#clocks-canvas {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.clocks__NYC,
+.clocks__MSQ,
+.clocks__LON,
+.clocks__TYO,
+.clocks__BER,
+.clocks__IEV {
+  padding: 10px;
+  width: 280px;
+  height: 250px;
+  /* background-color: rgb(2, 98, 66); */
+}
+.city {
+  margin-left: 10px;
+  font-weight: bold;
+}
+.clock {
+  margin: 20px auto 0;
+                          width: 200px;
+                          height: 200px;
+                          /* @include width-height(400px); */
+  position: relative;
+  border-radius: 50%;
+  background-color: rgb(5, 236, 159);
+}
+.center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.hourDigit {
+  width: 10%;
+  height: 10%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: rgb(228, 236, 5);
+}
+.digital-clock {
+    width: 100px;
+    height: 100px;
+}
+.secArrow {
+  border: 1px solid red;
+  border-radius: 1px;
+  position: absolute;
+  z-index: 3;
+  transform-origin: 0 0;
+}
+.minArrow {
+  border: 2px solid #000;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 2;
+  transform-origin: 0 0;
+}
+.hourArrow {
+    border: 3px solid #000;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1;
+    transform-origin: 0 0;
+}
+.digital-clock {
+  margin-top: 35px;
+  color: rgb(86, 140, 4);
+  font-size: 2rem;
+  font-family: 'Digital-7', arial;
+}
