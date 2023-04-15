@@ -10,6 +10,7 @@ function ClockViewDOM() {
   let hourArrow = null;
   let minArrow = null;
   let secArrow = null;
+  let cap = null;
 
   this.init = function(container) {
     containerClockView = container;
@@ -30,10 +31,12 @@ function ClockViewDOM() {
     secArrow = document.createElement('div');
     secArrow.className = 'secArrow';
     clock.append(secArrow);
+    cap = document.createElement('div');
+    cap.className = 'cap';
+    clock.append(cap);
   }
 
   this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y) {
-    // center = containerClockView.querySelector('.center');
     centerClockFacePositionX = center.offsetLeft + center.offsetWidth / 2;
     centerClockFacePositionY = center.offsetTop + center.offsetHeight / 2;
     hourDigit = document.createElement('div');
@@ -42,10 +45,8 @@ function ClockViewDOM() {
     hourDigit.style.left = Math.round(centerClockFacePositionX + centerDigit_X - hourDigit.offsetWidth / 2) + 'px';
     hourDigit.style.top = Math.round(centerClockFacePositionY + centerDigit_Y - hourDigit.offsetHeight / 2) + 'px';
     containerClockView.querySelector('.clock').append(hourDigit);
+    this.drawCentralCap();
   }
-
-
-
 
   this.moveSecArrow = function (radius, degree) {
     secArrow.style.width = radius * 0.75 + 'px';
@@ -67,8 +68,14 @@ function ClockViewDOM() {
     hourArrow.style.top = Math.round(centerClockFacePositionX) + 'px';
     hourArrow.style.transform = `rotate(${(degree - 90)}deg)`;
   }
+
   this.showCityGMTInfo = function (city, gmt) {
     containerClockView.querySelector('.city').textContent = `${city} (GMT${gmt})`;
+  }
+
+  this.drawCentralCap = function () {
+    cap.style.left = centerClockFacePositionX + 'px';
+    cap.style.top = centerClockFacePositionY + 'px';
   }
 }
 // Представление для SVG
@@ -158,7 +165,7 @@ function Clock() {
   }
 
   this.stopAnalogTime = function () {
-    console.log('1')
+    console.log('stopped')
     clearTimeout(timer);
   }
 }
@@ -173,6 +180,7 @@ function ClockControllerButtons() {
   let gmt = null;
   let stopBtn = null;
   let startBtn = null;
+  let timerFlag = true;
   
   this.init = function (model, container, selectedCity, timeZone) {
     modelClock = model;
@@ -189,12 +197,14 @@ function ClockControllerButtons() {
   }
   this.addHandlers = function () {
     stopBtn.addEventListener('click', () => { 
-      console.log(city, 'стоп')
       modelClock.stopAnalogTime();
+      timerFlag = false;
     });
     startBtn.addEventListener('click', () => {
-      console.log(city, 'старт')
-      modelClock.showAnalogTime();
+      if (!timerFlag) {
+        modelClock.showAnalogTime();
+        timerFlag = true;
+      }
     });
   }
 }
