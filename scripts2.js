@@ -23,7 +23,11 @@ function ClockViewDOM() {
     clock.style.width = widthClock + 'px';
     clock.style.height = heightClock + 'px';
     clock.style.backgroundColor = 'rgb(5, 236, 159)';
-    this.createClockArrows();
+                                      // this.createClockArrows();
+
+                                      center = document.createElement('div'); // из стр. 46
+                                      center.className = 'center';
+                                      clock.append(center);
   }
 
   this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock) {
@@ -35,14 +39,10 @@ function ClockViewDOM() {
     hourDigit.style.left = Math.round(centerClockFacePositionX + centerDigit_X - hourDigit.offsetWidth / 2) + 'px';
     hourDigit.style.top = Math.round(centerClockFacePositionY + centerDigit_Y - hourDigit.offsetHeight / 2) + 'px';
     containerClockView.querySelector('.clock').append(hourDigit);
-    this.drawCentralCap();
   }
 
   this.createClockArrows = function () {
     // clock = containerClockView.querySelector('.clock');
-    center = document.createElement('div');
-    center.className = 'center';
-    clock.append(center);
     hourArrow = document.createElement('div');
     hourArrow.className = 'hourArrow';
     clock.append(hourArrow);
@@ -55,8 +55,9 @@ function ClockViewDOM() {
     cap = document.createElement('div');
     cap.className = 'cap';
     clock.append(cap);
-    // cap.style.left = centerClockFacePositionX + 'px';
-    // cap.style.top = centerClockFacePositionY + 'px';
+    cap.style.left = centerClockFacePositionX + 'px';
+    cap.style.top = centerClockFacePositionY + 'px';
+    // this.drawCentralCap();
   }
 
   this.moveSecArrow = function (radius, degree) {
@@ -84,10 +85,10 @@ function ClockViewDOM() {
     containerClockView.querySelector('.city').textContent = `${city} (GMT${gmt})`;
   }
 
-  this.drawCentralCap = function () {
-    cap.style.left = centerClockFacePositionX + 'px';
-    cap.style.top = centerClockFacePositionY + 'px';
-  }
+  // this.drawCentralCap = function () {
+  //   cap.style.left = centerClockFacePositionX + 'px';
+  //   cap.style.top = centerClockFacePositionY + 'px';
+  // }
 }
 
 
@@ -136,8 +137,8 @@ function ClockViewSVG() {
     svg.append(clockFace);
 
 
-    this.createClockArrows(widthClock, heightClock, radius);
-    this.drawCentralCap(widthClock, heightClock);
+    // this.createClockArrows(widthClock, heightClock, radius);
+    // this.drawCentralCap(widthClock, heightClock);
   }
   this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock) {
     centerClockFacePositionX = svg.offsetLeft + widthClock / 2;
@@ -231,9 +232,9 @@ function ClockViewSVG() {
     containerClockView.querySelector('.city').textContent = `${city} (GMT${gmt})`;
   }
 
-  this.drawCentralCap = function (widthClock, heightClock) {
+  // this.drawCentralCap = function (widthClock, heightClock) {
 
-  }
+  // }
 }
 // Представление для Canvas
 function ClockViewCanvas() {
@@ -280,6 +281,7 @@ function Clock() {
       const centerDigit_posY = radius * 0.8 * Math.cos(angleRadiansClockFace);
       viewClock.drawClockFace(i, centerDigit_posX, centerDigit_posY, widthClock, heightClock);
     }
+                                          viewClock.createClockArrows(widthClock, heightClock, radius);
     this.showAnalogTime();
   }
 
