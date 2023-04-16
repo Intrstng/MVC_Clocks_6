@@ -47,7 +47,7 @@ body {
                           /* @include width-height(400px); */
   position: relative;
   border-radius: 50%;
-  background-color: rgb(5, 236, 159);
+  /* background-color: rgb(5, 236, 159); */
 }
 .center {
   position: absolute;
@@ -65,34 +65,38 @@ body {
   align-items: center;
   border-radius: 50%;
   background-color: rgb(228, 236, 5);
+  font-family: "Lobster", cursive;
 }
                               .digital-clock {
                                   width: 100px;
                                   height: 100px;
                               }
 .secArrow {
-  border: 1px solid red;
+  height: 1px;
+  background-color: rgb(255, 0, 0);
   border-radius: 1px;
   position: absolute;
   z-index: 3;
   transform-origin: 0 0;
 }
 .minArrow {
-  border: 2px solid #000;
+  height: 2px;
+  background-color: rgb(0, 0, 0);
   border-radius: 2px;
   position: absolute;
   z-index: 2;
   transform-origin: 0 0;
 }
 .hourArrow {
-  border: 2px solid #000;
+  height: 3px;
+  background-color: rgb(0, 0, 0);
   border-radius: 4px;
   position: absolute;
   z-index: 1;
   transform-origin: 0 0;
 }
 .cap {
-  background-color: red;
+  background-color: rgb(255, 0, 0);
   border-radius: 50%;
   width: 5%;
   height: 5%;
