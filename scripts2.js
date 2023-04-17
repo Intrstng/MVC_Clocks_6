@@ -26,7 +26,7 @@ function ClockViewDOM() {
     this.createClockArrows();
   }
 
-  this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock, angle) {
+  this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock) {
     centerClockFacePositionX = widthClock / 2/* center.offsetLeft + center.offsetWidth / 2; */
     centerClockFacePositionY = heightClock / 2/* center.offsetTop + center.offsetHeight / 2; */
     hourDigit = document.createElement('div');
@@ -123,7 +123,7 @@ function ClockViewSVG() {
     this.createClockArrows(widthClock, heightClock, radius);
   }
   
-  this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock, angle) {
+  this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock) {
     centerClockFacePositionX = svg.offsetLeft + widthClock / 2;
     centerClockFacePositionY = svg.offsetTop + heightClock / 2;
     // Рисуем круги для 12-ти цифр на циферблате
@@ -214,6 +214,8 @@ function ClockViewCanvas() {
   let ctx = null;
   let radius = null;
   let fontSize = null;
+  let canvasDataObj = null;
+ 
   this.init = function(container) {
     containerClockView = container;
   };
@@ -228,8 +230,11 @@ function ClockViewCanvas() {
     ctx = canvas.getContext('2d');
     radius = radiusClock;
     fontSize = radius * 0.2 + 'px';
+    // this.createClockFaceBase();
+  }
 
-    // Рисуем циферблат
+this.createClockFaceBase = function() {
+      // Рисуем циферблат
 // Blank canvas
 // this.blankCanvas();
 // Canvas center point
@@ -254,43 +259,66 @@ let ypos = canvas.height / 2;
   ctx.lineWidth = radius * 0.03;
   ctx.arc(xpos, ypos, radius - ctx.lineWidth / 2, 0, 2 * Math.PI);
   ctx.stroke();
-  }
+}
+
 
   this.blankCanvas = function(pos) {
     ctx.clearRect(pos, pos, canvas.width, canvas.height);
   }
 
-  this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock, angle) {
-    
-    if (canvas && canvas.getContext('2d')) {
-   // Draw clock face digits
-  //  this.blankCanvas();
+  this.setCanvasData = function(obj) {
+    canvasDataObj = obj;
+  }
+
+  // this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock) {
+  //                                              //  this.blankCanvas();
+  //   if (canvas && canvas.getContext('2d')) {
+  //  // Draw clock face digits
+  //                                             //  this.blankCanvas();
+  //       ctx.save();
+  //       ctx.beginPath();
+  //       ctx.rotate(angle);
+  //       ctx.translate(0, -radius * 0.77);
+  //       ctx.font = `bold ${fontSize} Lobster`;
+  //       ctx.fillStyle = 'rgb(0, 0, 0)';
+  //       ctx.textBaseline = 'middle';
+  //       ctx.textAlign = 'center';
+  //       ctx.rotate(-angle);
+  //       ctx.fillText(digit, radius, radius);
+  //       ctx.rotate(angle);
+  //       ctx.translate(0, radius * 0.77);
+  //       ctx.rotate(-angle);
+  //       ctx.restore();
+  //   }
+  // }
+
+
+  this.drawCanvasClockFace = function (obj) {
+    // Draw clock face digits
+    for (let number in obj) { // Обработка полученных данных из модели для отображения их во View
+      if (canvas && canvas.getContext('2d')) {
         ctx.save();
         ctx.beginPath();
-        ctx.rotate(angle);
+        ctx.rotate(obj[number]);
         ctx.translate(0, -radius * 0.77);
         ctx.font = `bold ${fontSize} Lobster`;
         ctx.fillStyle = 'rgb(0, 0, 0)';
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
-        ctx.rotate(-angle);
-        ctx.fillText(digit, radius, radius);
-        ctx.rotate(angle);
+        ctx.rotate(-obj[number]);
+        ctx.fillText(number, radius, radius);
+        ctx.rotate(obj[number]);
         ctx.translate(0, radius * 0.77);
-        ctx.rotate(-angle);
+        ctx.rotate(-obj[number]);
         ctx.restore();
+      }
     }
   }
 
-  // this.blankTranslatePos = function() {
-  //   // this.blankCanvas();
-  //   ctx.translate(radius, radius);
-  // }
-
   this.moveSecArrow = function (radius, degree, radians) {
-    // this.blankCanvas(0);
-    
-                        // this.drawClockFace();
+    this.blankCanvas(0);
+    this.createClockFaceBase();
+    this.drawCanvasClockFace(canvasDataObj);
     this.drawHand(radians, radius * 0.75, radius * 0.0035, 'rgb(74, 147, 77)');
   }
   
@@ -340,12 +368,12 @@ function Clock() {
   let viewClock = null; // Представление
   let city = null;
   let gmt = null;
-  let timer = null;
-  let width = null;
-  let height = null;
-  let radius = null;
-  let version = null;
-  let degrees = null;
+  let timer = null; // setTimeout, для его последующей отмены при клике на кнопку stopBtn
+  let width = null; // ширина часов
+  let height = null; // высота часов
+  let radius = null; // радиус часов (он же центр)
+  let version = null; // версия исполнения часов
+  let degrees = null; // расположение в градусах цифр на циферблате (шаг)
 
   this.init = function(view) {
     viewClock = view;                             
@@ -362,23 +390,28 @@ function Clock() {
   };
  
   this.createClockFace = function (widthClock, heightClock, radius) {
-    viewClock.createClock(widthClock, heightClock, radius); // Создает циферблат часов
+    // Создает часы (добавляет соответствующий элемент в верстку)
+    viewClock.createClock(widthClock, heightClock, radius);
     // Заполняет циферблат цифрами
     degrees = (version === 'DOM' || version === 'SVG') ? 150 : 30;
-    // if (version === 'Canvas') {
-    //   // viewClock.blankTranslatePos();
-    // }
+    let objCanvasClockFace = {}; // Объект для хранения координат цифр циферблата для часов в исполнении Canvas
     for (let i = 1; i <= 12; i++) {
       const angleRadiansClockFace = parseFloat(degrees) / 180 * Math.PI;     
       degrees = (version === 'DOM' || version === 'SVG') ? degrees - 30 : degrees + 30;
       // Координаты центра цифры циферблата
       const centerDigit_posX = radius * 0.8 * Math.sin(angleRadiansClockFace);
       const centerDigit_posY = radius * 0.8 * Math.cos(angleRadiansClockFace);
-      viewClock.drawClockFace(i, centerDigit_posX, centerDigit_posY, widthClock, heightClock, angleRadiansClockFace);
+      (version === 'DOM' || version === 'SVG') && viewClock.drawClockFace(i, centerDigit_posX, centerDigit_posY, widthClock, heightClock);
+      (version === 'Canvas') && (objCanvasClockFace[i] = angleRadiansClockFace);
     }
+    (version === 'Canvas') && this.setCanvasClockFaceData(objCanvasClockFace);
     this.showAnalogTime();
   }
-   
+  
+  this.setCanvasClockFaceData = function (obj) {
+    viewClock.setCanvasData(obj);
+  }
+
   this.showAnalogTime = function () {
     const date = new Date();
     const hour = date.getUTCHours() + gmt;
@@ -418,12 +451,12 @@ function Clock() {
 function ClockControllerButtons() {
   let modelClock = null; // Модель
   let containerClockControls = null; // Контейнер с управлением
-  let city = null;
-  let gmt = null;
-  let stopBtn = null;
-  let startBtn = null;
-  let version = null;
-  let timerFlag = true;
+  let city = null; // город
+  let gmt = null; // часовой пояс
+  let stopBtn = null; // кнопка старт
+  let startBtn = null; // кнопка стоп
+  let version = null; // версия исполнения часов (DOM, SVG, Canvas)
+  let timerFlag = true; // запущен ли ход часов (чтобы не запустить повторно уже идущие часы при случайном клике на кнопку startBtn)
   
   this.init = function (model, container, selectedCity, timeZone, width, height, clockVersion) {
     modelClock = model;
@@ -496,7 +529,7 @@ const containerDom_2 = document.querySelector("#clocks-DOM .clocks__second-item"
     const containerCanvas_2 = document.querySelector("#clocks-canvas .clocks__second-item");
 
 /* ------ Данные для отображения ------ */
-// Как вариант можно было сделать считывание через dataset
+// Как вариант, также можно было сделать считывание через dataset. Хотелось попробовать сделать менее зависимый от верстки способ
 const data = {
   city_1_DOM: 'Нью-Йорк',
   gmt_1_DOM: -5,
@@ -508,8 +541,8 @@ const data = {
   gmt_2_SVG: 9,
   city_1_Canvas: 'Берлин',
   gmt_1_Canvas: 1,
-  city_2_Canvas: 'Киев',
-  gmt_2_Canvas: 3,
+  city_2_Canvas: 'Владивосток',
+  gmt_2_Canvas: 10,
   width: 200,
   height: 200,
   version_DOM: 'DOM',
