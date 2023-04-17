@@ -55,8 +55,6 @@ function ClockViewDOM() {
     cap = document.createElement('div');
     cap.className = 'cap';
     clock.append(cap);
-    // cap.style.left = centerClockFacePositionX + 'px';
-    // cap.style.top = centerClockFacePositionY + 'px';
   }
 
   this.moveSecArrow = function (radius, degree, radians) {
@@ -97,7 +95,6 @@ function ClockViewSVG() {
   let centerClockFacePositionY = null;
   let arrowsCenterX = null;
   let arrowsCenterY = null;
-  // let hourDigit = null;
   let hourArrow = null;
   let minArrow = null;
   let secArrow = null;
@@ -125,6 +122,7 @@ function ClockViewSVG() {
     svg.append(clockFace);
     this.createClockArrows(widthClock, heightClock, radius);
   }
+  
   this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock, angle) {
     centerClockFacePositionX = svg.offsetLeft + widthClock / 2;
     centerClockFacePositionY = svg.offsetTop + heightClock / 2;
@@ -198,7 +196,8 @@ function ClockViewSVG() {
   
   this.moveMinArrow = function (radius, degree, radians) {
     minArrow.setAttributeNS(null, 'transform', `rotate(${degree - 180}, ${radius}, ${radius})`);
-  }    
+  }
+  
   this.moveHourArrow = function (radius, degree, radians) {
     hourArrow.setAttributeNS(null, 'transform', `rotate(${degree- 180}, ${radius}, ${radius})`);
   }
@@ -207,14 +206,14 @@ function ClockViewSVG() {
     containerClockView.querySelector('.city').textContent = `${city} (GMT${gmt})`;
   }
 }
+
 // Представление для Canvas
 function ClockViewCanvas() {
   let containerClockView = null;
   let canvas = null;
   let ctx = null;
-                  let radius = null;
-                  let fontSize = null;
-                  let canvasPadding = null;
+  let radius = null;
+  let fontSize = null;
   this.init = function(container) {
     containerClockView = container;
   };
@@ -227,9 +226,9 @@ function ClockViewCanvas() {
     canvas.setAttribute('class', 'clock');
     containerClockView.append(canvas);
     ctx = canvas.getContext('2d');
-                    radius = radiusClock;
-                    fontSize = radius * 0.2 + 'px';
-                    // canvasPadding = radius * 0.08;
+    radius = radiusClock;
+    fontSize = radius * 0.2 + 'px';
+
     // Рисуем циферблат
 // Blank canvas
 // this.blankCanvas();
@@ -255,11 +254,10 @@ let ypos = canvas.height / 2;
   ctx.lineWidth = radius * 0.03;
   ctx.arc(xpos, ypos, radius - ctx.lineWidth / 2, 0, 2 * Math.PI);
   ctx.stroke();
- 
   }
 
-  this.blankCanvas = function() {
-    ctx.clearRect(-radius, -radius, canvas.width, canvas.height);
+  this.blankCanvas = function(pos) {
+    ctx.clearRect(pos, pos, canvas.width, canvas.height);
   }
 
   this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock, angle) {
@@ -281,47 +279,18 @@ let ypos = canvas.height / 2;
         ctx.translate(0, radius * 0.77);
         ctx.rotate(-angle);
         ctx.restore();
-          // // Draw hour dashes - set styles
-          // ctx.save();
-          // ctx.beginPath();
-          // ctx.strokeStyle = 'rgb(0, 0, 0)';
-          // ctx.fillStyle = 'rgb(0, 0, 0)';
-          // ctx.lineWidth =  radius * 0.015;
-          // ctx.rotate(angle);
-          // ctx.strokeStyle = 'rgb(0, 0, 0)';
-          // // Draw hour dashes (watermelon seed styled)
-          //   let degreesStart = 270;
-          //   let radiansStart = (Math.PI / 180) * degreesStart;
-          //   let degreesEnd = 90;
-          //   let radiansEnd = (Math.PI / 180) * degreesEnd;
-          //   ctx.lineJoin = 'round';
-          //   ctx.beginPath();
-          //   ctx.moveTo(radius * 0.78, radius * 0.015);
-          //   ctx.lineTo(radius * 0.73, 0);
-          //   ctx.lineTo(radius * 0.78, -radius * 0.015);
-          //   ctx.arc(radius * 0.78, 0, radius * 0.015, radiansStart, radiansEnd);
-          //   ctx.closePath();
-          //   ctx.fill();
-          //   ctx.stroke();
-          //   ctx.restore();
-
     }
   }
 
-  this.blankTranslatePos = function() {
-    // this.blankCanvas();
-    ctx.translate(radius, radius);
-  }
-
-
-  // this.createClockArrows = function (widthClock, heightClock, radius) {
-    
+  // this.blankTranslatePos = function() {
+  //   // this.blankCanvas();
+  //   ctx.translate(radius, radius);
   // }
 
   this.moveSecArrow = function (radius, degree, radians) {
-    // this.blankCanvas();
-
-    // this.drawClockFace();
+    // this.blankCanvas(0);
+    
+                        // this.drawClockFace();
     this.drawHand(radians, radius * 0.75, radius * 0.0035, 'rgb(74, 147, 77)');
   }
   
@@ -355,7 +324,7 @@ let ypos = canvas.height / 2;
   this.drawCap = function (radius) {
     ctx.save();
     ctx.beginPath();
-    ctx.arc(0, 0, radius * 0.05, 0, 2 * Math.PI); // 0.025
+    ctx.arc(radius, radius, radius * 0.05, 0, 2 * Math.PI); // 0.025
     ctx.fillStyle = 'rgb(255, 0, 0)';
     ctx.fill();
     ctx.restore();
@@ -389,28 +358,19 @@ function Clock() {
     width = widthClock;
     height = heightClock;
     radius = (width / 2 + height / 2) / 2;
-    version = clockVersion;
-                                                  
+    version = clockVersion;                                   
   };
  
   this.createClockFace = function (widthClock, heightClock, radius) {
     viewClock.createClock(widthClock, heightClock, radius); // Создает циферблат часов
     // Заполняет циферблат цифрами
-                            degrees = (version === 'DOM' || version === 'SVG') ? 150 : 30;
-                            // degrees = 150;
-
-                            if (version === 'Canvas') {
-                              // viewClock.blankTranslatePos();
-                             
-                            }
-console.log(version)
+    degrees = (version === 'DOM' || version === 'SVG') ? 150 : 30;
+    // if (version === 'Canvas') {
+    //   // viewClock.blankTranslatePos();
+    // }
     for (let i = 1; i <= 12; i++) {
-      const angleRadiansClockFace = parseFloat(degrees) / 180 * Math.PI;
-
-      console.log(i, angleRadiansClockFace)
-      
-                            degrees = (version === 'DOM' || version === 'SVG') ? degrees - 30 : degrees + 30;
-                            // degrees -= 30;
+      const angleRadiansClockFace = parseFloat(degrees) / 180 * Math.PI;     
+      degrees = (version === 'DOM' || version === 'SVG') ? degrees - 30 : degrees + 30;
       // Координаты центра цифры циферблата
       const centerDigit_posX = radius * 0.8 * Math.sin(angleRadiansClockFace);
       const centerDigit_posY = radius * 0.8 * Math.cos(angleRadiansClockFace);
@@ -420,24 +380,18 @@ console.log(version)
   }
    
   this.showAnalogTime = function () {
-const date = new Date();
-const hour = date.getUTCHours() + gmt;
-const min = date.getMinutes();
-const sec = date.getSeconds();
-
-const secDegree = sec * 6;
-let minDegree = min * 6;
-let hourDegree = hour * 30 + minDegree / 12;
-secDegree === 360 && (secDegree = 0);
-minDegree === 360 && (minDegree = 0);
-
-
-
-const secRadians = ((2 * Math.PI) / 60) * sec /* +
-        ((2 * Math.PI) / 60000) * millisec; // Smooth movement of the second hand */
-const minRadians = min * 6 * (Math.PI / 180);
-const hourRadians = hourDegree * (Math.PI / 180);
-
+    const date = new Date();
+    const hour = date.getUTCHours() + gmt;
+    const min = date.getMinutes();
+    const sec = date.getSeconds();
+    const secDegree = sec * 6;
+    let minDegree = min * 6;
+    let hourDegree = hour * 30 + minDegree / 12;
+    secDegree === 360 && (secDegree = 0);
+    minDegree === 360 && (minDegree = 0);
+    const secRadians = ((2 * Math.PI) / 60) * sec;
+    const minRadians = min * 6 * (Math.PI / 180);
+    const hourRadians = hourDegree * (Math.PI / 180);
     viewClock.moveSecArrow(radius, secDegree, secRadians);
     viewClock.moveMinArrow(radius, minDegree, minRadians);
     viewClock.moveHourArrow(radius, hourDegree, hourRadians);
@@ -604,6 +558,3 @@ appControllerDOM_2.init(appModelDOM_2, containerDom_2, data.city_2_DOM, data.gmt
       appModelCanvas_1.init(appViewCanvas_1);
       // Clock №2 Canvas
       appModelCanvas_2.init(appViewCanvas_2);
-
-
-// window.onload = appModalController.blankViewData();
