@@ -107,42 +107,42 @@ function drawSvgElements() {
 
 
   function drawClockArrows() {
-    const svg = document.getElementById('clock');
-    const arrowsCenterX = svg.getBoundingClientRect().width / 2;
-    const arrowsCenterY = svg.getBoundingClientRect().height / 2;
-    const radius = svg.getBoundingClientRect().width > svg.getBoundingClientRect().height
-                ? (svg.getBoundingClientRect().height / 2)
-                : (svg.getBoundingClientRect().width / 2);
-    const hourArrow = document.createElementNS(svgNS, 'rect');
-    hourArrow.setAttributeNS(null, 'x', arrowsCenterX);
-    hourArrow.setAttributeNS(null, 'y', arrowsCenterY);
-    hourArrow.setAttributeNS(null, 'width', 3);
-    hourArrow.setAttributeNS(null, 'height', radius * 0.55);
-    hourArrow.setAttributeNS(null, 'rx', '2');
-    hourArrow.setAttributeNS(null, 'ry', '2');
-    hourArrow.setAttributeNS(null, 'fill', 'black');
-    hourArrow.setAttributeNS(null, 'id', 'hour-arrow');
-    svg.append(hourArrow);
-      const minArrow = document.createElementNS(svgNS, 'rect');
-      minArrow.setAttributeNS(null, 'x', arrowsCenterX);
-      minArrow.setAttributeNS(null, 'y', arrowsCenterY);
-      minArrow.setAttributeNS(null, 'width', 2);
-      minArrow.setAttributeNS(null, 'height', radius * 0.75);
-      minArrow.setAttributeNS(null, 'rx', '2');
-      minArrow.setAttributeNS(null, 'ry', '2');
-      minArrow.setAttributeNS(null, 'fill', 'black');
-      minArrow.setAttributeNS(null, 'id', 'min-arrow');
-      svg.append(minArrow);
-        const secArrow = document.createElementNS(svgNS, 'rect');
-        secArrow.setAttributeNS(null, 'x', arrowsCenterX);
-        secArrow.setAttributeNS(null, 'y', arrowsCenterY);
-        secArrow.setAttributeNS(null, 'width', 1);
-        secArrow.setAttributeNS(null, 'height', radius * 0.85);
-        secArrow.setAttributeNS(null, 'rx', '1');
-        secArrow.setAttributeNS(null, 'ry', '1');
-        secArrow.setAttributeNS(null, 'fill', 'red');
-        secArrow.setAttributeNS(null, 'id', 'sec-arrow');
-        svg.append(secArrow);
+                                                                            const svg = document.getElementById('clock');
+                                                        const arrowsCenterX = svg.getBoundingClientRect().width / 2;
+                                                        const arrowsCenterY = svg.getBoundingClientRect().height / 2;
+                                                        const radius = svg.getBoundingClientRect().width > svg.getBoundingClientRect().height
+                                                                    ? (svg.getBoundingClientRect().height / 2)
+                                                                    : (svg.getBoundingClientRect().width / 2);
+                                                                    const hourArrow = document.createElementNS(svgNS, 'rect');
+                                                                    hourArrow.setAttributeNS(null, 'x', arrowsCenterX);
+                                                                    hourArrow.setAttributeNS(null, 'y', arrowsCenterY);
+                                                                    hourArrow.setAttributeNS(null, 'width', 3);
+                                                                    hourArrow.setAttributeNS(null, 'height', radius * 0.55);
+                                                                    hourArrow.setAttributeNS(null, 'rx', '2');
+                                                                    hourArrow.setAttributeNS(null, 'ry', '2');
+                                                                    hourArrow.setAttributeNS(null, 'fill', 'black');
+                                                                    hourArrow.setAttributeNS(null, 'id', 'hour-arrow');
+                                                                    svg.append(hourArrow);
+                                                                      const minArrow = document.createElementNS(svgNS, 'rect');
+                                                                      minArrow.setAttributeNS(null, 'x', arrowsCenterX);
+                                                                      minArrow.setAttributeNS(null, 'y', arrowsCenterY);
+                                                                      minArrow.setAttributeNS(null, 'width', 2);
+                                                                      minArrow.setAttributeNS(null, 'height', radius * 0.75);
+                                                                      minArrow.setAttributeNS(null, 'rx', '2');
+                                                                      minArrow.setAttributeNS(null, 'ry', '2');
+                                                                      minArrow.setAttributeNS(null, 'fill', 'black');
+                                                                      minArrow.setAttributeNS(null, 'id', 'min-arrow');
+                                                                      svg.append(minArrow);
+                                                                        const secArrow = document.createElementNS(svgNS, 'rect');
+                                                                        secArrow.setAttributeNS(null, 'x', arrowsCenterX);
+                                                                        secArrow.setAttributeNS(null, 'y', arrowsCenterY);
+                                                                        secArrow.setAttributeNS(null, 'width', 1);
+                                                                        secArrow.setAttributeNS(null, 'height', radius * 0.85);
+                                                                        secArrow.setAttributeNS(null, 'rx', '1');
+                                                                        secArrow.setAttributeNS(null, 'ry', '1');
+                                                                        secArrow.setAttributeNS(null, 'fill', 'red');
+                                                                        secArrow.setAttributeNS(null, 'id', 'sec-arrow');
+                                                                        svg.append(secArrow);
   }
   drawClockArrows();
 }
