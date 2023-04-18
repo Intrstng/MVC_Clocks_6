@@ -16,14 +16,14 @@ function ClockViewDOM() {
     containerClockView = container;
   }
 
-  this.createClock = function(widthClock, heightClock, radius) {
+  this.createClock = function(widthClock, heightClock, radius, secLength, minLength, hourLength, secWidth, minWidth, hourWidth, capSize) {
     clock = document.createElement('div');
     clock.className = 'clock';
     containerClockView.append(clock);
     clock.style.width = widthClock + 'px';
     clock.style.height = heightClock + 'px';
     clock.style.backgroundColor = 'rgb(5, 236, 159)';
-    this.createClockArrows();
+    this.createClockArrows(widthClock, heightClock, radius, secLength, minLength, hourLength, secWidth, minWidth, hourWidth, capSize);
   }
 
   this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock) {
@@ -39,7 +39,7 @@ function ClockViewDOM() {
     cap.style.top = centerClockFacePositionY + 'px';
   }
 
-  this.createClockArrows = function () {
+  this.createClockArrows = function (widthClock, heightClock, radius, secLength, minLength, hourLength, secWidth, minWidth, hourWidth, capSize) {
     center = document.createElement('div');
     center.className = 'center';
     clock.append(center);
@@ -54,25 +54,31 @@ function ClockViewDOM() {
     clock.append(secArrow);
     cap = document.createElement('div');
     cap.className = 'cap';
+    cap.style.width = capSize * 2 + 'px';
+    cap.style.height = capSize * 2 + 'px';
+    cap.style.borderRadius = '50%';
     clock.append(cap);
   }
 
-  this.moveSecArrow = function (radius, degree, radians) {
-    secArrow.style.width = radius * 0.75 + 'px';
+  this.moveSecArrow = function (radius, degree, radians, length, width) {
+    secArrow.style.width = length + 'px';
+    secArrow.style.height = width + 'px';
     secArrow.style.left = Math.round(centerClockFacePositionY) + 'px';
     secArrow.style.top = Math.round(centerClockFacePositionX) + 'px';
     secArrow.style.transform = `rotate(${(degree - 90)}deg)`; 
   }
   
-  this.moveMinArrow = function (radius, degree, radians) {
-    minArrow.style.width = radius * 0.67 + 'px';
+  this.moveMinArrow = function (radius, degree, radians, length, width) {
+    minArrow.style.width = length + 'px';
+    minArrow.style.height = width + 'px';
     minArrow.style.left = Math.round(centerClockFacePositionY) + 'px';
     minArrow.style.top = Math.round(centerClockFacePositionX) + 'px';
     minArrow.style.transform = `rotate(${(degree - 90)}deg)`; 
   }
   
-  this.moveHourArrow = function (radius, degree, radians) {
-    hourArrow.style.width = radius * 0.5 + 'px';
+  this.moveHourArrow = function (radius, degree, radians, length, width, cap) {
+    hourArrow.style.width = length + 'px';
+    hourArrow.style.height = width + 'px';
     hourArrow.style.left = Math.round(centerClockFacePositionY) + 'px';
     hourArrow.style.top = Math.round(centerClockFacePositionX) + 'px';
     hourArrow.style.transform = `rotate(${(degree - 90)}deg)`;
@@ -106,7 +112,7 @@ function ClockViewSVG() {
     containerClockView = container;
   }
 
-  this.createClock = function(widthClock, heightClock, radius) {
+  this.createClock = function(widthClock, heightClock, radius, secLength, minLength, hourLength, secWidth, minWidth, hourWidth, capSize) {
     // Создаем SVG для часов
     svg = document.createElementNS(svgNS, 'svg');
     svg.setAttributeNS(null, 'width', widthClock);
@@ -120,7 +126,7 @@ function ClockViewSVG() {
     clockFace.setAttributeNS(null, 'r', radius);
     clockFace.setAttributeNS(null, 'fill', 'rgb(5, 236, 159)');
     svg.append(clockFace);
-    this.createClockArrows(widthClock, heightClock, radius);
+    this.createClockArrows(widthClock, heightClock, radius, secLength, minLength, hourLength, secWidth, minWidth, hourWidth, capSize);
   }
   
   this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock) {
@@ -150,12 +156,12 @@ function ClockViewSVG() {
     clockFaceDigitText.textContent = digit;
   }
 
-  this.createClockArrows = function (widthClock, heightClock, radius) {
+  this.createClockArrows = function (widthClock, heightClock, radius, secLength, minLength, hourLength, secWidth, minWidth, hourWidth, capSize) {
     hourArrow = document.createElementNS(svgNS, 'rect');
     hourArrow.setAttributeNS(null, 'x', radius);
     hourArrow.setAttributeNS(null, 'y', radius);
-    hourArrow.setAttributeNS(null, 'width', 3);
-    hourArrow.setAttributeNS(null, 'height', radius * 0.5);
+    hourArrow.setAttributeNS(null, 'width', hourWidth);
+    hourArrow.setAttributeNS(null, 'height', hourLength);
     hourArrow.setAttributeNS(null, 'rx', '2');
     hourArrow.setAttributeNS(null, 'ry', '2');
     hourArrow.setAttributeNS(null, 'fill', 'black');
@@ -164,8 +170,8 @@ function ClockViewSVG() {
       minArrow = document.createElementNS(svgNS, 'rect');
       minArrow.setAttributeNS(null, 'x', radius);
       minArrow.setAttributeNS(null, 'y', radius);
-      minArrow.setAttributeNS(null, 'width', 2);
-      minArrow.setAttributeNS(null, 'height', radius * 0.67);
+      minArrow.setAttributeNS(null, 'width', minWidth);
+      minArrow.setAttributeNS(null, 'height', minLength);
       minArrow.setAttributeNS(null, 'rx', '2');
       minArrow.setAttributeNS(null, 'ry', '2');
       minArrow.setAttributeNS(null, 'fill', 'black');
@@ -175,7 +181,7 @@ function ClockViewSVG() {
         secArrow.setAttributeNS(null, 'x', radius);
         secArrow.setAttributeNS(null, 'y', radius);
         secArrow.setAttributeNS(null, 'width', 1);
-        secArrow.setAttributeNS(null, 'height', radius * 0.75);
+        secArrow.setAttributeNS(null, 'height', secLength);
         secArrow.setAttributeNS(null, 'rx', '1');
         secArrow.setAttributeNS(null, 'ry', '1');
         secArrow.setAttributeNS(null, 'fill', 'red');
@@ -183,23 +189,23 @@ function ClockViewSVG() {
         svg.append(secArrow);
           // Draw central cap
           cap = document.createElementNS(svgNS, 'circle');
-          cap.setAttributeNS(null, 'r', widthClock > heightClock ? (heightClock / 2) * 0.05 : (widthClock / 2) * 0.05);
-          cap.setAttributeNS(null, 'cx', Math.round(widthClock / 2));
-          cap.setAttributeNS(null, 'cy', Math.round(heightClock / 2));
+          cap.setAttributeNS(null, 'r', capSize);
+          cap.setAttributeNS(null, 'cx', radius); // widthClock / 2
+          cap.setAttributeNS(null, 'cy', radius); // heightClock / 2
           cap.setAttributeNS(null, 'fill', 'rgb(255, 0, 0)');
           svg.append(cap);
   }
 
-  this.moveSecArrow = function (radius, degree, radians) {
+  this.moveSecArrow = function (radius, degree, radians, width) {
     secArrow.setAttributeNS(null, 'transform', `rotate(${degree - 180}, ${radius}, ${radius})`);
   }
   
-  this.moveMinArrow = function (radius, degree, radians) {
+  this.moveMinArrow = function (radius, degree, radians, width) {
     minArrow.setAttributeNS(null, 'transform', `rotate(${degree - 180}, ${radius}, ${radius})`);
   }
   
-  this.moveHourArrow = function (radius, degree, radians) {
-    hourArrow.setAttributeNS(null, 'transform', `rotate(${degree- 180}, ${radius}, ${radius})`);
+  this.moveHourArrow = function (radius, degree, radians, width, cap) {
+    hourArrow.setAttributeNS(null, 'transform', `rotate(${degree - 180}, ${radius}, ${radius})`);
   }
 
   this.showCityGMTInfo = function (city, gmt) {
@@ -219,7 +225,7 @@ function ClockViewCanvas() {
   this.init = function(container) {
     containerClockView = container;
   };
-  this.createClock = function(widthClock, heightClock, radiusClock) {
+  this.createClock = function(widthClock, heightClock, radiusClock, secLength, minLength, hourLength, secWidth, minWidth, hourWidth, capSize) {
     // Создаем Canvas для часов
     canvas = document.createElement('canvas');
     canvas.textContent = 'Ваш браузер не поддерживает Canvas';
@@ -233,34 +239,33 @@ function ClockViewCanvas() {
     // this.createClockFaceBase();
   }
 
-this.createClockFaceBase = function() {
-      // Рисуем циферблат
-// Blank canvas
-// this.blankCanvas();
-// Canvas center point
-let xpos = canvas.width / 2;
-let ypos = canvas.height / 2;
-// Create clock face
-  ctx.beginPath();
-  // Draw gradient in center of clockface
-  const grad = ctx.createRadialGradient(xpos, ypos, 1, xpos, ypos, radius / 1.25);
-  grad.addColorStop(0,'rgb(255, 255, 255)');
-  grad.addColorStop(1,'rgb(238, 62, 61)');
-  ctx.fillStyle = grad;
-  // Draw light green colored watermelon rind
-  ctx.strokeStyle = 'rgb(200, 207, 145)';
-  ctx.lineWidth = radius * 0.09;
-  ctx.arc(xpos, ypos, radius - ctx.lineWidth / 2, 0, 2 * Math.PI);
-  ctx.fill();
-  ctx.stroke();
-  // Draw green colored watermelon rind
-  ctx.beginPath();
-  ctx.strokeStyle = 'rgb(74, 147, 77)';
-  ctx.lineWidth = radius * 0.03;
-  ctx.arc(xpos, ypos, radius - ctx.lineWidth / 2, 0, 2 * Math.PI);
-  ctx.stroke();
-}
-
+  this.createClockFaceBase = function() {
+        // Рисуем циферблат
+  // Blank canvas
+  // this.blankCanvas();
+  // Canvas center point
+  let xpos = canvas.width / 2;
+  let ypos = canvas.height / 2;
+  // Create clock face
+    ctx.beginPath();
+    // Draw gradient in center of clockface
+    const grad = ctx.createRadialGradient(xpos, ypos, 1, xpos, ypos, radius / 1.25);
+    grad.addColorStop(0,'rgb(255, 255, 255)');
+    grad.addColorStop(1,'rgb(238, 62, 61)');
+    ctx.fillStyle = grad;
+    // Draw light green colored watermelon rind
+    ctx.strokeStyle = 'rgb(200, 207, 145)';
+    ctx.lineWidth = radius * 0.09;
+    ctx.arc(xpos, ypos, radius - ctx.lineWidth / 2, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    // Draw green colored watermelon rind
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgb(74, 147, 77)';
+    ctx.lineWidth = radius * 0.03;
+    ctx.arc(xpos, ypos, radius - ctx.lineWidth / 2, 0, 2 * Math.PI);
+    ctx.stroke();
+  }
 
   this.blankCanvas = function(pos) {
     ctx.clearRect(pos, pos, canvas.width, canvas.height);
@@ -269,29 +274,6 @@ let ypos = canvas.height / 2;
   this.setCanvasData = function(obj) {
     canvasDataObj = obj;
   }
-
-  // this.drawClockFace = function (digit, centerDigit_X, centerDigit_Y, widthClock, heightClock) {
-  //                                              //  this.blankCanvas();
-  //   if (canvas && canvas.getContext('2d')) {
-  //  // Draw clock face digits
-  //                                             //  this.blankCanvas();
-  //       ctx.save();
-  //       ctx.beginPath();
-  //       ctx.rotate(angle);
-  //       ctx.translate(0, -radius * 0.77);
-  //       ctx.font = `bold ${fontSize} Lobster`;
-  //       ctx.fillStyle = 'rgb(0, 0, 0)';
-  //       ctx.textBaseline = 'middle';
-  //       ctx.textAlign = 'center';
-  //       ctx.rotate(-angle);
-  //       ctx.fillText(digit, radius, radius);
-  //       ctx.rotate(angle);
-  //       ctx.translate(0, radius * 0.77);
-  //       ctx.rotate(-angle);
-  //       ctx.restore();
-  //   }
-  // }
-
 
   this.drawCanvasClockFace = function (obj) {
     // Draw clock face digits
@@ -315,19 +297,19 @@ let ypos = canvas.height / 2;
     }
   }
 
-  this.moveSecArrow = function (radius, degree, radians) {
+  this.moveSecArrow = function (radius, degree, radians, length, width) {
     this.blankCanvas(0);
     this.createClockFaceBase();
     this.drawCanvasClockFace(canvasDataObj);
-    this.drawHand(radians, radius * 0.75, radius * 0.0035, 'rgb(74, 147, 77)');
+    this.drawHand(radians, length, width, 'rgb(74, 147, 77)');
   }
   
-  this.moveMinArrow = function (radius, degree, radians) {
-    this.drawHand(radians, radius * 0.67, radius * 0.008, 'rgb(0, 0, 0)');
+  this.moveMinArrow = function (radius, degree, radians, length, width) {
+    this.drawHand(radians, length, width, 'rgb(0, 0, 0)');
   }    
-  this.moveHourArrow = function (radius, degree, radians) {
-    this.drawHand(radians, radius * 0.5, radius * 0.011, 'rgb(0, 0, 0)');
-    this.drawCap(radius);
+  this.moveHourArrow = function (radius, degree, radians, length, width, cap) {
+    this.drawHand(radians, length, width, 'rgb(0, 0, 0)');
+    this.drawCap(cap);
   }
 
   this.drawHand = function (pos, length, width, color) {
@@ -349,10 +331,10 @@ let ypos = canvas.height / 2;
     ctx.restore();
   }
 
-  this.drawCap = function (radius) {
+  this.drawCap = function (cap) {
     ctx.save();
     ctx.beginPath();
-    ctx.arc(radius, radius, radius * 0.05, 0, 2 * Math.PI); // 0.025
+    ctx.arc(radius, radius, cap, 0, 2 * Math.PI); // 0.025
     ctx.fillStyle = 'rgb(255, 0, 0)';
     ctx.fill();
     ctx.restore();
@@ -374,10 +356,17 @@ function Clock() {
   let radius = null; // радиус часов (он же центр)
   let version = null; // версия исполнения часов
   let degrees = null; // расположение в градусах цифр на циферблате (шаг)
+  let hourArrowLength = null; // длина часовой стрелки
+  let minArrowLength = null; // длина минутной стрелки
+  let secArrowLength = null; // длина секундной стрелки
+  let hourArrowWidth = null; // ширина часовой стрелки
+  let minArrowWidth = null; // ширина минутной стрелки
+  let secArrowWidth = null; // ширина секундной стрелки
+  let capSize = null; // размер центральной точки оси стрелок
 
   this.init = function(view) {
     viewClock = view;                             
-    this.createClockFace(width, height, radius);
+    this.createClockFace(width, height, radius, secArrowLength, minArrowLength, hourArrowLength, secArrowWidth, minArrowWidth, hourArrowWidth, capSize);
     this.showCityAndGMTInfo();
   }
   this.saveModelData = function(selectedCity, timeZone, widthClock, heightClock, clockVersion) {
@@ -386,12 +375,19 @@ function Clock() {
     width = widthClock;
     height = heightClock;
     radius = (width / 2 + height / 2) / 2;
-    version = clockVersion;                                   
+    version = clockVersion;
+    hourArrowLength = radius * 0.53;
+    minArrowLength = radius * 0.66;
+    secArrowLength = radius * 0.68;
+    hourArrowWidth = radius * 0.011;
+    minArrowWidth = radius * 0.008;
+    secArrowWidth = radius * 0.0035;
+    capSize = width > height ? (height / 2) * 0.025 : (width / 2) * 0.025;         
   };
  
-  this.createClockFace = function (widthClock, heightClock, radius) {
+  this.createClockFace = function (widthClock, heightClock, radius, secArrowLength, minArrowLength, hourArrowLength, secArrowWidth, minArrowWidth, hourArrowWidth, capSize) {
     // Создает часы (добавляет соответствующий элемент в верстку)
-    viewClock.createClock(widthClock, heightClock, radius);
+    viewClock.createClock(widthClock, heightClock, radius, secArrowLength, minArrowLength, hourArrowLength, secArrowWidth, minArrowWidth, hourArrowWidth, capSize);
     // Заполняет циферблат цифрами
     degrees = (version === 'DOM' || version === 'SVG') ? 150 : 30;
     let objCanvasClockFace = {}; // Объект для хранения координат цифр циферблата для часов в исполнении Canvas
@@ -425,9 +421,9 @@ function Clock() {
     const secRadians = ((2 * Math.PI) / 60) * sec;
     const minRadians = min * 6 * (Math.PI / 180);
     const hourRadians = hourDegree * (Math.PI / 180);
-    viewClock.moveSecArrow(radius, secDegree, secRadians);
-    viewClock.moveMinArrow(radius, minDegree, minRadians);
-    viewClock.moveHourArrow(radius, hourDegree, hourRadians);
+    viewClock.moveSecArrow(radius, secDegree, secRadians, secArrowLength, secArrowWidth);
+    viewClock.moveMinArrow(radius, minDegree, minRadians, minArrowLength, minArrowWidth);
+    viewClock.moveHourArrow(radius, hourDegree, hourRadians, hourArrowLength, hourArrowWidth, capSize);
     timer = setTimeout(() => {
       this.showAnalogTime();
     }, 1000);
@@ -445,7 +441,6 @@ function Clock() {
     viewClock.showCityGMTInfo(city, printGMT);
   }
 }
-
 
 /* ------ Controller ------ */
 function ClockControllerButtons() {
@@ -469,9 +464,11 @@ function ClockControllerButtons() {
     this.setDataToModel(city, gmt, width, height, version);
     this.addHandlers();
   }
+
   this.setDataToModel = function (selectedCity, timeZone, width, height, clockVersion) {
     modelClock.saveModelData(selectedCity, timeZone, width, height, clockVersion);
   }
+  
   this.addHandlers = function () {
     stopBtn.addEventListener('click', () => { 
       modelClock.stopAnalogTime();
