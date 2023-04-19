@@ -37,8 +37,6 @@ body {
   transform: translate(-50%, -50%);
 }
 .hourDigit {
-  width: 10%;
-  height: 10%;
   position: absolute;
   transform: translate(-50%, -50%);
   display: flex;
